@@ -1,7 +1,5 @@
 #include QMK_KEYBOARD_H
 
-
-
 #define _LAYER0 0
 #define _LAYER1 1
 #define _LAYER2 2
@@ -27,7 +25,7 @@ enum custom_keycodes {
     KC_TAB,         KC_Q,      KC_W,        KC_E,       KC_R,       KC_T,       KC_Y,       KC_U,       KC_I,       KC_O,       KC_P,       KC_DEL,
     KC_BSPC,        KC_A,      KC_S,        KC_D,       KC_F,       KC_G,       KC_H,       KC_J,       KC_K,       KC_L,       KC_SCLN,    KC_ENT,
    OSM(MOD_LSFT),   KC_Z,      KC_X,        KC_C,       KC_V,       KC_B,       KC_N,       KC_M,       KC_COMM,    KC_DOT,     KC_SLSH,    KC_UP,
-    CTL_T(KC_CAPS), KC_LGUI,ALT_T(KC_LGUI),     CTL_T(KC_ENT),    KC_FNX,    KC_SPC,            KC_SPC,     MO(2),      KC_LEFT,    KC_RGHT,    KC_DOWN
+    CTL_T(KC_CAPS), KC_LGUI,ALT_T(KC_LGUI), KC_LCTL,    KC_FNX,         KC_SPC,             KC_SPC,     MO(2),      KC_LEFT,    KC_RGHT,    KC_DOWN
  ),
 
 [_LAYER1] = LAYOUT_preonic_1x2uC(
@@ -129,7 +127,7 @@ bool is_alt_tab_active = false; // ADD this near the begining of keymap.c
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // tap oneshot shift, hold MO(1)
     static uint16_t fnx_layer_timer;
-
+    //update_swapper(&is_alt_tab_active, KC_LALT, KC_TAB, ALT_TAB, keycode, record);
     switch (keycode){
         case KC_FNX:
             if(record->event.pressed){
@@ -138,7 +136,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
                 layer_off(1);
                 if (timer_elapsed(fnx_layer_timer) < 175) {
-                    set_oneshot_mods(MOD_LSFT);
+                    set_oneshot_mods(MOD_BIT(KC_LSFT));
                 }
             }
             break;
@@ -155,14 +153,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         return false;
     }
-    return true;
-}
-
-void matrix_scan_user(void) {
     if (is_alt_tab_active) {
         if(IS_LAYER_OFF(1)) {
             unregister_code(KC_LALT);
             is_alt_tab_active = false;
         }
     }
-}// alt tab end
+    return true;
+}
+
+//void update_swapper(
+//    bool *active,
+//    uint16_t cmdish,
+//    uint16_t tabish,
+//    uint16_t trigger,
+//    uint16_t keycode,
+//    keyrecord_t *record
+//) {
+//    if (keycode == trigger) {
+//        if (record->event.pressed) {
+//            if (!*active) {
+//                *active = true;
+//                register_code(cmdish);
+//            }
+//            register_code(tabish);
+//        } else {
+//            unregister_code(tabish);
+//            // Don't unregister cmdish until some other key is hit or released.
+//        }
+//    } else if (*active) {
+//        unregister_code(cmdish);
+//        *active = false;
+//    }
+//}
