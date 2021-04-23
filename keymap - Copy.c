@@ -1,4 +1,4 @@
-#include QMK_KEYBOARD_H
+ #include QMK_KEYBOARD_H
 
 #define _QWERTY 0
 #define _COLEMAK 1
@@ -7,8 +7,13 @@
 #define _ADJUST 4
 #define _GAME 5
 
-#define LT2B LT(_LAYER2, KC_BSPC)
-#define LT3S LT(_LAYER3, KC_SPC)
+#define LT2B = LT(_LAYER2, KC_BSPC);
+#define LT3S = LT(_LAYER3, KC_SPC);
+#define bigBrac ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR);
+#define midBrac ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC);
+#define smallBrac ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN);
+#define quote ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQUO);
+
 
 enum custom_keycodes {
     QWERTY = SAFE_RANGE,
@@ -20,31 +25,14 @@ enum custom_keycodes {
     ALT_TAB,
 };
 
-enum {
-    BIGBRAC,
-    MIDBRAC,
-    SMABRAC,
-    QUOTEDQ
-};
-
-// Tap Dance definitions
-qk_tap_dance_action_t tap_dance_actions[] = {
-    // Tap once for Escape, twice for Caps Lock
-    [BIGBRAC] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR),
-    [MIDBRAC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
-    [SMABRAC] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN),
-    [QUOTEDQ] = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQUO)
-};
-
-
  const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
  [_QWERTY] = LAYOUT_preonic_1x2uC(
     KC_GESC,        KC_1,       KC_2,        KC_3,       KC_4,       KC_5,       KC_6,       KC_7,       KC_8,       KC_9,       KC_0,       KC_BSPC,
     KC_TAB,         KC_Q,       KC_W,        KC_E,       KC_R,       KC_T,       KC_Y,       KC_U,       KC_I,       KC_O,       KC_P,       KC_DEL,
     CTL_T(KC_BSPC), KC_A,       KC_S,        KC_D,       KC_F,       KC_G,       KC_H,       KC_J,       KC_K,       KC_L,       KC_SCLN,    KC_ENT,
-    KC_LSFT,        KC_Z,       KC_X,        KC_C,       KC_V,       KC_B,       KC_N,       KC_M,       KC_COMM,    KC_DOT,     KC_SLSH,    KC_UP,
-    CTL_T(KC_CAPS), KC_LALT,    KC_LGUI,   KC_LSFT,    LT2B,          SFT_T(KC_SPC),       LT3S,       KC_LCTL,    KC_LEFT,    KC_RGHT,    KC_DOWN
+    OSM(MOD_LSFT),  KC_Z,       KC_X,        KC_C,       KC_V,       KC_B,       KC_N,       KC_M,       KC_COMM,    KC_DOT,     KC_SLSH,    KC_UP,
+    CTL_T(KC_CAPS), KC_LALT,    KC_LGUI,  OSM(MOD_LSFT), LT2B,          SFT_T(KC_SPC),       LT3S,       KC_LALT,    KC_LEFT,    KC_RGHT,    KC_DOWN
  ),
 
  [_COLEMAK] = LAYOUT_preonic_1x2uC(
@@ -52,15 +40,15 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     KC_TRNS,        KC_Q,       KC_W,        KC_F,       KC_P,       KC_B,       KC_J,       KC_L,       KC_U,       KC_Y,       KC_SCLN,    KC_TRNS,
     KC_TRNS,        KC_A,       KC_R,        KC_S,       KC_T,       KC_G,       KC_M,       KC_N,       KC_E,       KC_I,       KC_O,       KC_TRNS,
     KC_TRNS,        KC_Z,       KC_X,        KC_C,       KC_D,       KC_V,       KC_K,       KC_H,       KC_COMM,    KC_DOT,     KC_SLSH,    KC_TRNS,
-    KC_TRNS,        KC_TRNS,    KC_TRNS,     KC_TRNS,    KC_TRNS,      SFT_T(KC_SPC),       KC_TRNS,     KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS
+    KC_TRNS,        KC_TRNS,    KC_TRNS,     KC_TRNS,    KC_TRNS,      SFT_T(KC_SPC),     LT(3, KC_SPC), KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS
  ),
 
 [_LAYER2] = LAYOUT_preonic_1x2uC(
-    C(S(KC_ESC)),   S(KC_1),    S(KC_2),    S(KC_3),    S(KC_4),    S(KC_5),    S(KC_6),    S(KC_7),    S(KC_8),    S(KC_9),    S(KC_0),    KC_CALC,
-    ALT_TAB,        KC_TRNS,    C(KC_W),    KC_EQL,     KC_PPLS,    KC_PAST,    C(KC_Y),  S(KC_MINS),   KC_HOME,    KC_END,    KC_BSLS,    C(KC_DEL),
-    C(KC_BSPC),     C(KC_A),    C(KC_S),    KC_0,       KC_MINS,    KC_SLSH,    KC_TRNS,    TD(BIGBRAC),  TD(MIDBRAC), TD(SMABRAC),  S(KC_SCLN), TD(QUOTEDQ),
+    KC_MUTE,        KC_MPRV,    KC_MPLY,    KC_MNXT,    KC_VOLD,    KC_VOLU,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_LPRN,    KC_RPRN,    KC_CALC,
+    ALT_TAB,        KC_TRNS,    C(KC_W),    KC_EQL,     KC_PPLS,    KC_PAST,    C(KC_Y),  S(KC_MINS),   KC_LPRN,    KC_RPRN,    KC_BSLS,    C(KC_DEL),
+    C(KC_BSPC),     C(KC_A),    C(KC_S),    KC_0,       KC_MINS,    KC_SLSH,    KC_TRNS,    KC_LCBR,    KC_LBRC,    KC_RBRC,    KC_RCBR,    KC_QUOT,
     KC_TRNS,        C(KC_Z),    C(KC_X),    C(KC_C),    C(KC_V),    KC_EXLM,    KC_PIPE,    KC_AMPR,    KC_LT,      KC_GT,      KC_QUES,    KC_PGUP,
-    KC_TRNS,        KC_TRNS,    S(G(KC_S)), KC_TRNS,    KC_TRNS,        KC_TRNS,            KC_SPC,     KC_TRNS,    KC_HOME,    KC_END,     KC_PGDN
+    KC_TRNS,        KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,        KC_TRNS,            KC_SPC,     KC_TRNS,    KC_HOME,    KC_END,     KC_PGDN
  ),
 
 [_LAYER3] = LAYOUT_preonic_1x2uC(
@@ -111,8 +99,8 @@ const rgblight_segment_t PROGMEM game_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {0, 9, HSV_MAGENTA}
 );
 const rgblight_segment_t PROGMEM colemak_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {7, 2, HSV_ORANGE},
-    {1, 2, HSV_ORANGE}
+    {7, 2, HSV_PINK},
+    {1, 2, HSV_PINK}
 );
 
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
@@ -197,30 +185,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
     return true;
-}
-
-bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case CTL_T(KC_BSPC):
-            return false;
-        default:
-            return true;
-    }
-}
-
-
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case LT2B:
-            return TAPPING_TERM - 50;
-        case BIGBRAC:
-        case MIDBRAC:
-        case SMABRAC:
-        case QUOTEDQ:
-            return TAPPING_TERM - 75;
-        case SFT_T(KC_SPC):
-            return TAPPING_TERM + 25;
-        default:
-            return TAPPING_TERM;
-    }
 }
